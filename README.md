@@ -5,9 +5,11 @@ Public Terraform Registry module for setting up an AZURE hosted Sonarqube ACI in
 
 This module will build the following azure resources:
 
-- Azure Resource Group
+- Azure Resource Group (Optional)
 - Azure Storage account and file shares
-- Azure SQL instance and external database
-- Azure Container Group containing:
-  - SonarQube container instance
+- Azure SQL instance and database
+- Azure Container Group:
+  - Sonarqube container instance
   - Caddy Reverse Proxy container instance
+
+Ref: [Sonarqube docker tags](https://hub.docker.com/_/sonarqube)
