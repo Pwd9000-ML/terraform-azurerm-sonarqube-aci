@@ -1,6 +1,6 @@
-terraform {
-  backend "azurerm" {}
-}
+#terraform {
+#  backend "azurerm" {}
+#}
 
 provider "azurerm" {
   features {}
@@ -10,5 +10,5 @@ provider "azurerm" {
 # MODULE TO TEST                                 #
 ##################################################
 module "sonarqube-aci-test" {
-  source                  = "../.."
+  source = "../.."
 }

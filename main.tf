@@ -24,8 +24,8 @@ resource "random_integer" "sa_num" {
   max = 9999
 }
 resource "azurerm_storage_account" "sonarqube_shares" {
-  resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg_name[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg_name[0].name)
-  location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg_name[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg_name[0].location)
+  resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
+  location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
 
   #values from variable config object
   name                      = lower(substr("${var.storage_config.name}${random_integer.sa_num.result}", 0, 24))

@@ -6,11 +6,17 @@ variable "tags" {
   type = map(string)
   default = {
     Terraform   = "True"
-    Description = "This is a sonarcube aci demo built with Terraform"
+    Description = "Sonarqube aci demo built with Terraform"
     Author      = "Marcel Lupo"
     GitHub      = "https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci"
   }
   description = "Optional Input - A map of key value pairs that is used to tag resources created."
+}
+
+variable "location" {
+  type        = string
+  default     = "uksouth"
+  description = "Optional Input - Location in azure where resources will be created. (Only in effect on newly created Resource Group when var.create_rg=true)"
 }
 
 ###Resource Group###
