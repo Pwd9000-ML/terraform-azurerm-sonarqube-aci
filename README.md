@@ -6,6 +6,7 @@ Public Terraform Registry module for setting up an AZURE hosted Sonarqube ACI in
 This module will build the following azure resources:
 
 - Azure Resource Group (Optional)
+- Azure Key Vault
 - Azure Storage account and file shares
 - Azure SQL instance and database
 - Azure Container Group:

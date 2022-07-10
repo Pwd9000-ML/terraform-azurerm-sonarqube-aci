@@ -32,8 +32,21 @@ variable "sonarqube_rg_name" {
   description = "Optional Input - Name of the existing resource group. (var.create_rg=false) / Name of the resource group to create. (var.create_rg=true)."
 }
 
+###Key Vault###
+variable "kv_config" {
+  type = object({
+    name = string
+    sku  = string
+  })
+  default = {
+    name = "sonarqubekv"
+    sku  = "standard"
+  }
+  description = "Optional Input - Key Vault configuration object to create azure key vault to store sonarqube aci sql creds."
+}
+
 ###Storage Account###
-variable "storage_config" {
+variable "sa_config" {
   type = object({
     name                      = string
     account_kind              = string
@@ -61,4 +74,37 @@ variable "storage_config" {
     logs_quota_gb             = 10
   }
   description = "Optional Input - Storage configuration object to create persistent azure file shares for sonarqube aci."
+}
+
+###Azure SQL Server###
+variable "pass_length" {
+  type        = number
+  default     = 24
+  description = "Optional Input - Password length for sql admin creds. (Stored in sonarqube key vault)"
+}
+
+variable "sql_admin_username" {
+  type        = string
+  default     = "Sonar-Admin"
+  description = "Optional Input - Username for sql admin creds. (Stored in sonarqube key vault)"
+}
+
+variable "mssql_config" {
+  type = object({
+    name    = string
+    version = string
+  })
+  default = {
+    name    = "sonarqubemssql"
+    version = "12.0"
+  }
+  description = "Optional Input - MSSQL configuration object to create persistent SQL server instance for sonarqube aci."
+}
+
+variable "mssql_fw_rules" {
+  type = list(list(string))
+  default = [
+    ["Allow All Azure IPs", "0.0.0.0", "0.0.0.0"]
+  ]
+  description = "list of SQL firewall rules in format: [[rule1, startIP, endIP],[rule2, startIP, endIP]] etc."
 }
