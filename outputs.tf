@@ -20,3 +20,13 @@ output "sonarqube_aci_mssql_id" {
   value       = azurerm_mssql_server.sonarqube_mssql.id
   description = "The resource ID for the sonarqube MSSQL Server instance."
 }
+
+output "sonarqube_aci_mssql_db_id" {
+  value       = azurerm_mssql_database.sonarqube_mssql_db.id
+  description = "The resource ID for the sonarqube MSSQL database."
+}
+
+output "sonarqube_aci_mssql_db_name" {
+  value       = azurerm_mssql_database.sonarqube_mssql_db.id
+  description = "The name of the sonarqube MSSQL database."
+}

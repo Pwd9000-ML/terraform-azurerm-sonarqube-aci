@@ -108,3 +108,42 @@ variable "mssql_fw_rules" {
   ]
   description = "list of SQL firewall rules in format: [[rule1, startIP, endIP],[rule2, startIP, endIP]] etc."
 }
+
+###MSSQL Database###
+variable "mssql_db_config" {
+  type = object({
+    db_name                     = string
+    collation                   = string
+    create_mode                 = string
+    license_type                = string
+    max_size_gb                 = number
+    min_capacity                = number
+    auto_pause_delay_in_minutes = number
+    read_scale                  = bool
+    sku_name                    = string
+    storage_account_type        = string
+    zone_redundant              = bool
+    point_in_time_restore_days  = number
+    ltr_weekly_retention        = string
+    ltr_week_of_year            = number
+  })
+  default = {
+    db_name                     = "sonarqubemssqldb"
+    collation                   = "SQL_Latin1_General_CP1_CS_AS"
+    create_mode                 = "Default"
+    license_type                = "LicenseIncluded"
+    max_size_gb                 = 32
+    min_capacity                = 1
+    auto_pause_delay_in_minutes = 60
+    read_scale                  = false
+    sku_name                    = "GP_S_Gen5_1"
+    storage_account_type        = "Zone"
+    zone_redundant              = false
+    point_in_time_restore_days  = 7
+    ltr_weekly_retention        = "P7D"
+    ltr_week_of_year            = 1
+  }
+  description = "Optional Input - MSSQL database configuration object to create persistent azure SQL db for sonarqube aci."
+}
+
+

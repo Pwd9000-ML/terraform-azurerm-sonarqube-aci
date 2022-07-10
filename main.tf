@@ -5,7 +5,6 @@ data "azurerm_resource_group" "sonarqube_rg" {
   count = var.create_rg != true ? 1 : 0
   name  = var.sonarqube_rg_name
 }
-
 data "azurerm_client_config" "current" {}
 
 ##################################################
@@ -25,7 +24,7 @@ resource "azurerm_resource_group" "sonarqube_rg" {
 }
 
 ###Key Vault###
-#Create Key Vault with RBAC model (To store SQL admin Password and Username)
+#Create Key Vault with RBAC model (To save SQL admin Password and Username)
 resource "azurerm_key_vault" "sonarqube_kv" {
   resource_group_name       = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location                  = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
@@ -120,4 +119,29 @@ resource "azurerm_mssql_firewall_rule" "sonarqube_mssql_fw_rules" {
   name             = var.mssql_fw_rules[count.index][0]
   start_ip_address = var.mssql_fw_rules[count.index][1]
   end_ip_address   = var.mssql_fw_rules[count.index][2]
+}
+
+###MSSQL Database###
+resource "azurerm_mssql_database" "sonarqube_mssql_db" {
+  server_id = azurerm_mssql_server.sonarqube_mssql.id
+  #values from variable mssql_db_config object
+  name                        = lower("${var.mssql_db_config.db_name}${random_integer.number.result}")
+  collation                   = var.mssql_db_config.collation
+  create_mode                 = var.mssql_db_config.create_mode
+  license_type                = var.mssql_db_config.license_type
+  max_size_gb                 = var.mssql_db_config.max_size_gb
+  min_capacity                = var.mssql_db_config.min_capacity
+  auto_pause_delay_in_minutes = var.mssql_db_config.auto_pause_delay_in_minutes
+  read_scale                  = var.mssql_db_config.read_scale
+  sku_name                    = var.mssql_db_config.sku_name
+  storage_account_type        = var.mssql_db_config.storage_account_type
+  zone_redundant              = var.mssql_db_config.zone_redundant
+  short_term_retention_policy {
+    retention_days = var.mssql_db_config.point_in_time_restore_days
+  }
+  long_term_retention_policy {
+    weekly_retention = var.mssql_db_config.ltr_weekly_retention
+    week_of_year     = var.mssql_db_config.ltr_week_of_year
+  }
+  tags = var.tags
 }
