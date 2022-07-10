@@ -139,9 +139,5 @@ resource "azurerm_mssql_database" "sonarqube_mssql_db" {
   short_term_retention_policy {
     retention_days = var.mssql_db_config.point_in_time_restore_days
   }
-  long_term_retention_policy {
-    weekly_retention = var.mssql_db_config.ltr_weekly_retention
-    week_of_year     = var.mssql_db_config.ltr_week_of_year
-  }
   tags = var.tags
 }
