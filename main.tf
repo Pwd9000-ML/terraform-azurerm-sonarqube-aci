@@ -44,7 +44,7 @@ resource "azurerm_role_assignment" "kv_role_assigment" {
 }
 
 ###Storage Account###
-resource "azurerm_storage_account" "sonarqube_shares" {
+resource "azurerm_storage_account" "sonarqube_sa" {
   resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
   #values from variable sa_config object
@@ -58,23 +58,19 @@ resource "azurerm_storage_account" "sonarqube_shares" {
   is_hns_enabled            = var.sa_config.is_hns_enabled
   tags                      = var.tags
 }
-#Sonarqube data share
-resource "azurerm_storage_share" "sonarqube_data_share" {
-  name                 = "data"
-  storage_account_name = azurerm_storage_account.sonarqube_shares.name
-  quota                = var.sa_config.data_quota_gb
+#Sonarqube shares
+resource "azurerm_storage_share" "sonarqube" {
+  for_each             = { for n in var.shares_config : n.share_name => n }
+  name                 = each.value.share_name
+  quota                = each.value.quota_gb
+  storage_account_name = azurerm_storage_account.sonarqube_sa.name
 }
-#Sonarqube extensions share
-resource "azurerm_storage_share" "sonarqube_extensions_share" {
-  name                 = "extensions"
-  storage_account_name = azurerm_storage_account.sonarqube_shares.name
-  quota                = var.sa_config.extensions_quota_gb
-}
-#Sonarqube storage share
-resource "azurerm_storage_share" "sonarqube_logs_share" {
-  name                 = "logs"
-  storage_account_name = azurerm_storage_account.sonarqube_shares.name
-  quota                = var.sa_config.logs_quota_gb
+#Upload config file
+resource "azurerm_storage_share_file" "sonar_properties" {
+  name             = "sonar.properties"
+  storage_share_id = azurerm_storage_share.sonarqube["conf"].id
+  #source           = abspath("${path.root}/sonar.properties")
+  source = abspath("../../sonar.properties")
 }
 
 ###Azure SQL Server###
@@ -140,4 +136,109 @@ resource "azurerm_mssql_database" "sonarqube_mssql_db" {
     retention_days = var.mssql_db_config.point_in_time_restore_days
   }
   tags = var.tags
+}
+
+###Container Group - ACIs###
+resource "azurerm_container_group" "sonarqube_aci" {
+  resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
+  location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
+  #values from variable aci_config object
+  name            = lower("${var.aci_group_config.container_group_name}${random_integer.number.result}")
+  ip_address_type = var.aci_group_config.ip_address_type
+  dns_name_label  = var.aci_group_config.dns_label
+  os_type         = var.aci_group_config.os_type
+  restart_policy  = var.aci_group_config.restart_policy
+  tags            = var.tags
+
+  container {
+    name   = "sonarqube-server"
+    image  = "sonarqube:lts-community"
+    cpu    = 2
+    memory = 8
+    #environment_variables = {
+    #  WEBSITES_CONTAINER_START_TIME_LIMIT = 400
+    #}    
+    secure_environment_variables = {
+      SONARQUBE_JDBC_URL      = "jdbc:sqlserver://${azurerm_mssql_server.sonarqube_mssql.name}.database.windows.net:1433;database=${azurerm_mssql_database.sonarqube_mssql_db.name};user=${azurerm_key_vault_secret.username_secret.value}@${azurerm_mssql_server.sonarqube_mssql.name};password=${azurerm_key_vault_secret.password_secret.value};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
+      SONARQUBE_JDBC_USERNAME = azurerm_key_vault_secret.username_secret.value
+      SONARQUBE_JDBC_PASSWORD = azurerm_key_vault_secret.password_secret.value
+    }
+
+    ports {
+      port     = 9000
+      protocol = "TCP"
+    }
+
+    volume {
+      name                 = "data"
+      mount_path           = "/opt/sonarqube/data"
+      share_name           = "data"
+      storage_account_name = azurerm_storage_account.sonarqube_sa.name
+      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
+    }
+
+    volume {
+      name                 = "extensions"
+      mount_path           = "/opt/sonarqube/extensions"
+      share_name           = "extensions"
+      storage_account_name = azurerm_storage_account.sonarqube_sa.name
+      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
+    }
+
+    volume {
+      name                 = "logs"
+      mount_path           = "/opt/sonarqube/logs"
+      share_name           = "logs"
+      storage_account_name = azurerm_storage_account.sonarqube_sa.name
+      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
+    }
+
+    volume {
+      name                 = "conf"
+      mount_path           = "/opt/sonarqube/conf"
+      share_name           = "conf"
+      storage_account_name = azurerm_storage_account.sonarqube_sa.name
+      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
+    }
+  }
+
+  container {
+    name     = "caddy-ssl-server"
+    image    = "caddy:latest"
+    cpu      = "1"
+    memory   = "1"
+    commands = ["caddy", "reverse-proxy", "--from", "sonar.pwd9000.com", "--to", "localhost:9000"]
+
+    ports {
+      port     = 443
+      protocol = "TCP"
+    }
+
+    ports {
+      port     = 80
+      protocol = "TCP"
+    }
+  }
+
+  depends_on = [azurerm_storage_share_file.sonar_properties]
+
+  #  dynamic "container" {
+  #    for_each = var.container_config
+  #    content {
+  #      name = container_config.value.container_name
+  #      image = container_config.value.container_image
+  #      cpu = container_config.value.container_cpu
+  #      memory = container_config.value.container_memory
+  #      commands = lookup(container_config.value.container_commands, " ", null)
+
+  #      dynamic "ports" {
+  #        for_each = toset(rewrite_rule.value["ports"] ? [1] : [])
+  #        content {
+  #          port = 
+  #          protocol =
+  #        }
+
+
+  #     }
+  # }
 }

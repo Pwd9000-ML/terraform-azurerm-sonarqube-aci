@@ -56,9 +56,6 @@ variable "sa_config" {
     enable_https_traffic_only = bool
     min_tls_version           = string
     is_hns_enabled            = bool
-    data_quota_gb             = number
-    extensions_quota_gb       = number
-    logs_quota_gb             = number
   })
   default = {
     name                      = "sonarqubesa"
@@ -69,11 +66,34 @@ variable "sa_config" {
     enable_https_traffic_only = true
     access_tier               = "Hot"
     is_hns_enabled            = false
-    data_quota_gb             = 10
-    extensions_quota_gb       = 10
-    logs_quota_gb             = 10
   }
   description = "Optional Input - Storage configuration object to create persistent azure file shares for sonarqube aci."
+}
+
+variable "shares_config" {
+  type = list(object({
+    share_name = string
+    quota_gb   = number
+  }))
+  default = [
+    {
+      share_name = "data"
+      quota_gb   = 10
+    },
+    {
+      share_name = "extensions"
+      quota_gb   = 10
+    },
+    {
+      share_name = "logs"
+      quota_gb   = 10
+    },
+    {
+      share_name = "conf"
+      quota_gb   = 1
+    }
+  ]
+  description = "Optional Input - Sonarqube file shares"
 }
 
 ###Azure SQL Server###
@@ -142,4 +162,21 @@ variable "mssql_db_config" {
   description = "Optional Input - MSSQL database configuration object to create persistent azure SQL db for sonarqube aci."
 }
 
-
+###Container Group - ACIs###
+variable "aci_group_config" {
+  type = object({
+    container_group_name = string
+    ip_address_type      = string
+    dns_label            = string
+    os_type              = string
+    restart_policy       = string
+  })
+  default = {
+    container_group_name = "sonarqubeaci"
+    ip_address_type      = "Public"
+    dns_label            = "pwd9000-sonarqube"
+    os_type              = "Linux"
+    restart_policy       = "OnFailure"
+  }
+  description = "Optional Input - Container group configuration object to create sonarqube aci with caddy."
+}
