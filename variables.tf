@@ -180,3 +180,43 @@ variable "aci_group_config" {
   }
   description = "Optional Input - Container group configuration object to create sonarqube aci with caddy."
 }
+
+variable "sonar_config" {
+  type = object({
+    container_name                  = string
+    container_image                 = string
+    container_cpu                   = number
+    container_memory                = number
+    container_environment_variables = map(string)
+    container_commands              = list(string)
+  })
+  default = {
+    container_name                  = "sonarqube-server"
+    container_image                 = "sonarqube:lts-community"
+    container_cpu                   = 2
+    container_memory                = 8
+    container_environment_variables = null
+    container_commands              = []
+  }
+  description = "Optional Input - Sonarqube container configuration object to create sonarqube aci."
+}
+
+variable "caddy_config" {
+  type = object({
+    container_name                  = string
+    container_image                 = string
+    container_cpu                   = number
+    container_memory                = number
+    container_environment_variables = map(string)
+    container_commands              = list(string)
+  })
+  default = {
+    container_name                  = "caddy-reverse-proxy"
+    container_image                 = "caddy:latest"
+    container_cpu                   = 1
+    container_memory                = 1
+    container_environment_variables = null
+    container_commands              = ["caddy", "reverse-proxy", "--from", "sonar.pwd9000.com", "--to", "localhost:9000"]
+  }
+  description = "Optional Input - Sonarqube container configuration object to create sonarqube aci."
+}

@@ -142,7 +142,7 @@ resource "azurerm_mssql_database" "sonarqube_mssql_db" {
 resource "azurerm_container_group" "sonarqube_aci" {
   resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
-  #values from variable aci_config object
+  #values from variable aci_group_config object
   name            = lower("${var.aci_group_config.container_group_name}${random_integer.number.result}")
   ip_address_type = var.aci_group_config.ip_address_type
   dns_name_label  = var.aci_group_config.dns_label
@@ -150,95 +150,47 @@ resource "azurerm_container_group" "sonarqube_aci" {
   restart_policy  = var.aci_group_config.restart_policy
   tags            = var.tags
 
+  #Sonarqube container
   container {
-    name   = "sonarqube-server"
-    image  = "sonarqube:lts-community"
-    cpu    = 2
-    memory = 8
-    #environment_variables = {
-    #  WEBSITES_CONTAINER_START_TIME_LIMIT = 400
-    #}    
-    secure_environment_variables = {
-      SONARQUBE_JDBC_URL      = "jdbc:sqlserver://${azurerm_mssql_server.sonarqube_mssql.name}.database.windows.net:1433;database=${azurerm_mssql_database.sonarqube_mssql_db.name};user=${azurerm_key_vault_secret.username_secret.value}@${azurerm_mssql_server.sonarqube_mssql.name};password=${azurerm_key_vault_secret.password_secret.value};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
-      SONARQUBE_JDBC_USERNAME = azurerm_key_vault_secret.username_secret.value
-      SONARQUBE_JDBC_PASSWORD = azurerm_key_vault_secret.password_secret.value
-    }
-
+    name                         = var.sonar_config.container_name
+    image                        = var.sonar_config.container_image
+    cpu                          = var.sonar_config.container_cpu
+    memory                       = var.sonar_config.container_memory
+    environment_variables        = var.sonar_config.container_environment_variables
+    secure_environment_variables = local.sonar_sec_vars
+    commands                     = var.sonar_config.container_commands
     ports {
       port     = 9000
       protocol = "TCP"
     }
-
-    volume {
-      name                 = "data"
-      mount_path           = "/opt/sonarqube/data"
-      share_name           = "data"
-      storage_account_name = azurerm_storage_account.sonarqube_sa.name
-      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
-    }
-
-    volume {
-      name                 = "extensions"
-      mount_path           = "/opt/sonarqube/extensions"
-      share_name           = "extensions"
-      storage_account_name = azurerm_storage_account.sonarqube_sa.name
-      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
-    }
-
-    volume {
-      name                 = "logs"
-      mount_path           = "/opt/sonarqube/logs"
-      share_name           = "logs"
-      storage_account_name = azurerm_storage_account.sonarqube_sa.name
-      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
-    }
-
-    volume {
-      name                 = "conf"
-      mount_path           = "/opt/sonarqube/conf"
-      share_name           = "conf"
-      storage_account_name = azurerm_storage_account.sonarqube_sa.name
-      storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
+    dynamic "volume" {
+      for_each = var.shares_config
+      content {
+        name                 = volume.value.share_name
+        mount_path           = "/opt/sonarqube/${volume.value.share_name}"
+        share_name           = volume.value.share_name
+        storage_account_name = azurerm_storage_account.sonarqube_sa.name
+        storage_account_key  = azurerm_storage_account.sonarqube_sa.primary_access_key
+      }
     }
   }
 
+  #Caddy container
   container {
-    name     = "caddy-ssl-server"
-    image    = "caddy:latest"
-    cpu      = "1"
-    memory   = "1"
-    commands = ["caddy", "reverse-proxy", "--from", "sonar.pwd9000.com", "--to", "localhost:9000"]
-
+    name                  = var.caddy_config.container_name
+    image                 = var.caddy_config.container_image
+    cpu                   = var.caddy_config.container_cpu
+    memory                = var.caddy_config.container_memory
+    environment_variables = var.caddy_config.container_environment_variables
+    commands              = var.caddy_config.container_commands
     ports {
       port     = 443
       protocol = "TCP"
     }
-
     ports {
       port     = 80
       protocol = "TCP"
     }
   }
-
   depends_on = [azurerm_storage_share_file.sonar_properties]
-
-  #  dynamic "container" {
-  #    for_each = var.container_config
-  #    content {
-  #      name = container_config.value.container_name
-  #      image = container_config.value.container_image
-  #      cpu = container_config.value.container_cpu
-  #      memory = container_config.value.container_memory
-  #      commands = lookup(container_config.value.container_commands, " ", null)
-
-  #      dynamic "ports" {
-  #        for_each = toset(rewrite_rule.value["ports"] ? [1] : [])
-  #        content {
-  #          port = 
-  #          protocol =
-  #        }
-
-
-  #     }
-  # }
 }

@@ -17,7 +17,7 @@ output "sonarqube_aci_sa_id" {
 }
 
 output "sonarqube_aci_share_ids" {
-  value       =  toset([ for each in azurerm_storage_share.sonarqube : each.id ])
+  value       = toset([for each in azurerm_storage_share.sonarqube : each.id])
   description = "List of resource IDs of each of the sonarqube file shares."
 }
 
@@ -33,5 +33,10 @@ output "sonarqube_aci_mssql_db_id" {
 
 output "sonarqube_aci_mssql_db_name" {
   value       = azurerm_mssql_database.sonarqube_mssql_db.name
+  description = "The name of the sonarqube MSSQL database."
+}
+
+output "sonarqube_aci_container_group_id" {
+  value       = azurerm_container_group.sonarqube_aci.id
   description = "The name of the sonarqube MSSQL database."
 }
