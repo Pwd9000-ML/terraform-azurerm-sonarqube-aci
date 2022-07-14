@@ -14,7 +14,7 @@ provider "azurerm" {
 # MODULE TO TEST                                 #
 ##################################################
 module "sonarcube-aci" {
-  source = "../.."
+  source            = "../.."
   sonarqube_rg_name = var.sonarqube_rg_name
-  caddy_config = var.caddy_config
+  caddy_config      = var.caddy_config
 }

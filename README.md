@@ -84,21 +84,21 @@ This example requires very limited input. Only specify an Azure Resource Group a
 
 ```hcl
 provider "azurerm" {
-    features {}
+  features {}
 }
 
 module "sonarcube-aci" {
-    source  = "github.com/Pwd9000-ML/terraform-azurerm-sonarcube-aci"
+  source = "github.com/Pwd9000-ML/terraform-azurerm-sonarcube-aci"
 
-    sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
-    caddy_config = {
-      container_name                  = "caddy-reverse-proxy"
-      container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
-      container_cpu                   = 1
-      container_memory                = 1
-      container_environment_variables = null
-      container_commands              = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
-    }
+  sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
+  caddy_config = {
+    container_name                  = "caddy-reverse-proxy"
+    container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+    container_cpu                   = 1
+    container_memory                = 1
+    container_environment_variables = null
+    container_commands              = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
+  }
 }
 ```
 

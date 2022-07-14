@@ -69,7 +69,7 @@ resource "azurerm_storage_share" "sonarqube" {
 resource "azurerm_storage_share_file" "sonar_properties" {
   name             = "sonar.properties"
   storage_share_id = azurerm_storage_share.sonarqube["conf"].id
-  source = abspath("${path.module}/sonar.properties")
+  source           = abspath("${path.module}/sonar.properties")
 }
 
 ###Azure SQL Server###
