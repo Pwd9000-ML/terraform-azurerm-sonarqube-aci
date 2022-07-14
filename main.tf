@@ -60,7 +60,7 @@ resource "azurerm_storage_account" "sonarqube_sa" {
 }
 #Sonarqube shares
 resource "azurerm_storage_share" "sonarqube" {
-  for_each             = { for each in var.shares_config : each.share_name => n }
+  for_each             = { for each in var.shares_config : each.share_name => each }
   name                 = each.value.share_name
   quota                = each.value.quota_gb
   storage_account_name = azurerm_storage_account.sonarqube_sa.name
