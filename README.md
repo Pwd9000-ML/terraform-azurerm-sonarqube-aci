@@ -39,7 +39,7 @@ After resource creation, get the DNS-Label of the container group: **(dnslabel).
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dnslabel02.png)
 
-Ensure you create a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group.
+Ensure you create a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label FQDN of the ACI container group.
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns01.png)
 
@@ -109,7 +109,7 @@ module "sonarcube-aci" {
 }
 ```
 
-**NOTE:** Remember to create a **DNS 'CNAME'** record on your DNS provider to point your **"custom.domain.com"** to the **(dnslabel).(azureregion).azurecontainer.io**
+**NOTE:** Remember to create a **DNS 'CNAME'** record on your DNS provider to point your **"custom.domain.com"** to **(dnslabel).(azureregion).azurecontainer.io**
 
 ## Example 2
 
@@ -213,4 +213,4 @@ module "sonarcube-aci" {
 }
 ```
 
-**NOTE:** Remember to create a **DNS 'CNAME'** record on your DNS provider to point your **"custom.domain.com"** to the **(dnslabel).(azureregion).azurecontainer.io**
+**NOTE:** Remember to create a **DNS 'CNAME'** record on your DNS provider to point your **"custom.domain.com"** to **(dnslabel).(azureregion).azurecontainer.io**
