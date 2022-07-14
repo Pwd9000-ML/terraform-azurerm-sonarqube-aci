@@ -31,7 +31,7 @@ See **Examples** on caddy usage. More information can also be found here: [caddy
 container_commands = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
 ```
 
-After all resources are created, get the DNS-Label of the container group **(sonarqube-aci.{azureregion}.azurecontainer.io)**:
+After all resources are created, get the DNS-Label of the container group **sonarqube-aci.(azureregion).azurecontainer.io**:
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dnslabel.png)
 
@@ -102,7 +102,7 @@ module "sonarcube-aci" {
 }
 ```
 
-After all resources are created, get the DNS-Label of the container group **(sonarqube-aci.{azureregion}.azurecontainer.io)** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
+After all resources are created, get the DNS-Label of the container group: **sonarqube-aci.(azureregion).azurecontainer.io** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns.png)
 ## Example 2
