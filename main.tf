@@ -141,10 +141,10 @@ resource "azurerm_mssql_database" "sonarqube_mssql_db" {
 resource "azurerm_container_group" "sonarqube_aci" {
   resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
+  dns_name_label      = var.aci_dns_label
   #values from variable aci_group_config object
   name            = lower("${var.aci_group_config.container_group_name}${random_integer.number.result}")
   ip_address_type = var.aci_group_config.ip_address_type
-  dns_name_label  = var.aci_group_config.dns_label
   os_type         = var.aci_group_config.os_type
   restart_policy  = var.aci_group_config.restart_policy
   tags            = var.tags

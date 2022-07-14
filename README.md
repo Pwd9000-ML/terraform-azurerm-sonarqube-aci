@@ -35,7 +35,7 @@ See [Examples](https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/tre
 container_commands = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
 ```
 
-After resource creation, get the DNS-Label of the container group: **sonarqube-aci.(azureregion).azurecontainer.io**:
+After resource creation, get the DNS-Label of the container group: **(dnslabel).(azureregion).azurecontainer.io**:
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dnslabel02.png)
 
@@ -67,6 +67,7 @@ Caddy container image reference: [Caddy docker image tags](https://hub.docker.co
 - `mssql_config` - (Optional) MSSQL configuration object to create persistent SQL server instance for sonarqube aci.
 - `mssql_fw_rules` - (Optional) List of SQL firewall rules in format: `[[rule1, startIP, endIP],[rule2, startIP, endIP]]` etc.
 - `mssql_db_config` - (Optional) MSSQL database configuration object to create persistent azure SQL db for sonarqube aci.
+- `aci_dns_label` - (Optional) DNS label to assign onto the Azure Container Group.
 - `aci_group_config` - (Optional) Container group configuration object to create sonarqube aci with caddy reverse proxy.
 - `sonar_config` - (Optional) Sonarqube container configuration object to create sonarqube aci.
 - `caddy_config` - (Optional) Caddy container configuration object to create caddy reverse proxy aci.
@@ -85,7 +86,7 @@ Caddy container image reference: [Caddy docker image tags](https://hub.docker.co
 ## Example 1
 
 Simple example where the entire solution is built in a new Resource Group (Default).  
-This example requires very limited input. Only specify an Azure Resource Group and supply your **custom domain (FQDN)** you want to link to the Let's encrypt cert using the variable `caddy_config`.  
+This example requires very limited input. Only specify an Azure Resource Group and supply your **custom domain (FQDN)** you want to link to the Let's encrypt cert using the variable `var.caddy_config` and the container group DNS label using the variable `var.aci_dns_label`.  
 
 ```hcl
 provider "azurerm" {
@@ -96,6 +97,7 @@ module "sonarcube-aci" {
   source = "Pwd9000-ML/sonarqube-aci/azurerm"
 
   sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
+  aci_dns_label = "sonarqube-aci"
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
     container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
@@ -106,6 +108,8 @@ module "sonarcube-aci" {
   }
 }
 ```
+
+**NOTE:** Remember to create a **DNS 'CNAME'** record on your DNS provider to point your **"custom.domain.com"** to the **(dnslabel).(azureregion).azurecontainer.io**
 
 ## Example 2
 
@@ -177,10 +181,10 @@ module "sonarcube-aci" {
     zone_redundant              = false
     point_in_time_restore_days  = 7
   }
+  aci_dns_label = "sonarqube-aci"
   aci_group_config = {
     container_group_name = "sonarqubeaci9000"
     ip_address_type      = "Public"
-    dns_label            = "sonarqube-aci"
     os_type              = "Linux"
     restart_policy       = "OnFailure"
   }
@@ -208,3 +212,5 @@ module "sonarcube-aci" {
   }
 }
 ```
+
+**NOTE:** Remember to create a **DNS 'CNAME'** record on your DNS provider to point your **"custom.domain.com"** to the **(dnslabel).(azureregion).azurecontainer.io**

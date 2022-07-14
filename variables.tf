@@ -163,18 +163,22 @@ variable "mssql_db_config" {
 }
 
 ###Container Group - ACIs###
+variable "aci_dns_label" {
+  type = "string"
+  default = "sonarqube-aci"
+  description = "DNS label to assign onto the Azure Container Group."
+}
+
 variable "aci_group_config" {
   type = object({
     container_group_name = string
     ip_address_type      = string
-    dns_label            = string
     os_type              = string
     restart_policy       = string
   })
   default = {
     container_group_name = "sonarqubeaci"
     ip_address_type      = "Public"
-    dns_label            = "sonarqube-aci"
     os_type              = "Linux"
     restart_policy       = "OnFailure"
   }
