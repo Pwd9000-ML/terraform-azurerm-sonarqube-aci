@@ -80,7 +80,7 @@ Sonarqube container image reference: [Sonarqube docker image tags](https://hub.d
 ## Example 1
 
 Simple example where the entire solution is built in a new Resource Group (Default).  
-This example requires very limited input. Only specify a Resource Group and supply your custom domain (FQDN) you wan tto link to the certificate.  
+This example requires very limited input. Only specify an Azure Resource Group and supply your custom domain (FQDN) you want to link to the Let's encrypt cert using the variable `caddy_config`.  
 
 ```hcl
 provider "azurerm" {
@@ -90,49 +90,21 @@ provider "azurerm" {
 module "sonarcube-aci" {
     source  = "github.com/Pwd9000-ML/terraform-azurerm-sonarcube-aci"
 
-    create_rg               = false     #Existing VNET Resource group name must be provided.
-    virtual_network_rg_name = "Core-Networking-Rg"
-    dns_entries             = ["10.1.0.10", "10.1.0.138"]
+    sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
+    caddy_config = {
+      container_name                  = "caddy-reverse-proxy"
+      container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+      container_cpu                   = 1
+      container_memory                = 1
+      container_environment_variables = null
+      container_commands              = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
+    }
 }
 ```
 
+After all resources are created, get the DNS-Label of the container group **(sonarqube-aci.<azureregion>.azurecontainer.io)** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
+
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/dns.png)
 ## Example 2
 
-Simple example where a new Vnet with custom DNS will be created in an existing resource group.  
-This example requires an existing resource group and will create a new vnet populated with demo subnets based on the default input variables.  
-
-```hcl
-provider "azurerm" {
-    features {}
-}
-
-module "dynamic-subnets" {
-    source                  = "github.com/Pwd9000-ML/terraform-azurerm-dynamic-subnets"
-
-    create_rg               = false     #Existing VNET Resource group name must be provided.
-    virtual_network_rg_name = "Core-Networking-Rg"
-    dns_entries             = ["10.1.0.10", "10.1.0.138"]
-}
-```
-
 ## Example 3
-
-Simple example where subnets are populated dynamically onto an existing Vnet.  
-This example requires an existing resource group and VNET that will be populated with demo subnets based on the default input variables.  
-This example assumes a network address space of "10.1.0.0/22" with no subnets exists.  
-For more advanced examples see: [examples](https://github.com/Pwd9000-ML/terraform-azurerm-dynamic-subnets/tree/master/examples)  
-
-```hcl
-provider "azurerm" {
-    features {}
-}
-
-module "dynamic-subnets" {
-    source                  = "github.com/Pwd9000-ML/terraform-azurerm-dynamic-subnets"
-
-    create_rg               = false     #Existing VNET Resource group name must be provided.
-    create_vnet             = false     #Existing VNET name must be provided.
-    virtual_network_rg_name = "My-ResourceGroup-Name"
-    virtual_network_name    = "My-VNET-Name"
-}
-```
