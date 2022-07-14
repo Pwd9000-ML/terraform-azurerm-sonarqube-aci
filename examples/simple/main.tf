@@ -6,6 +6,7 @@ module "sonarcube-aci" {
   source = "Pwd9000-ML/sonarqube-aci/azurerm"
 
   sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
+  aci_dns_label     = "sonarqube-aci"
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
     container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy

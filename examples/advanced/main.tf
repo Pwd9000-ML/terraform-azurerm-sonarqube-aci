@@ -62,10 +62,10 @@ module "sonarcube-aci" {
     zone_redundant              = false
     point_in_time_restore_days  = 7
   }
+  aci_dns_label    = "sonarqube-aci"
   aci_group_config = {
     container_group_name = "sonarqubeaci9000"
     ip_address_type      = "Public"
-    dns_label            = "sonarqube-aci"
     os_type              = "Linux"
     restart_policy       = "OnFailure"
   }
