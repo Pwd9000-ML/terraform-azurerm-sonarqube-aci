@@ -164,8 +164,8 @@ variable "mssql_db_config" {
 
 ###Container Group - ACIs###
 variable "aci_dns_label" {
-  type = "string"
-  default = "sonarqube-aci"
+  type        = string
+  default     = "sonarqube-aci"
   description = "DNS label to assign onto the Azure Container Group."
 }
 

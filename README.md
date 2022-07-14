@@ -97,7 +97,7 @@ module "sonarcube-aci" {
   source = "Pwd9000-ML/sonarqube-aci/azurerm"
 
   sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
-  aci_dns_label = "sonarqube-aci"
+  aci_dns_label     = "sonarqube-aci"
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
     container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
@@ -181,7 +181,7 @@ module "sonarcube-aci" {
     zone_redundant              = false
     point_in_time_restore_days  = 7
   }
-  aci_dns_label = "sonarqube-aci"
+  aci_dns_label    = "sonarqube-aci"
   aci_group_config = {
     container_group_name = "sonarqubeaci9000"
     ip_address_type      = "Public"
