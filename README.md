@@ -35,7 +35,7 @@ container_commands = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "
 
 After all resources are created, get the DNS-Label of the container group **sonarqube-aci.(azureregion).azurecontainer.io**:
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dnslabel.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dnslabel01.png)
 
 Ensure you create a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group.
 
@@ -107,6 +107,7 @@ module "sonarcube-aci" {
 After all resources are created, get the DNS-Label of the container group: **sonarqube-aci.(azureregion).azurecontainer.io** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns01.png)
+
 ## Example 2
 
 ## Example 3

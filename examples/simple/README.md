@@ -1,7 +1,8 @@
 # Description
 
 Simple example where the entire solution is built in a new Resource Group (Default).  
-This example requires very limited input. Only specify an Azure Resource Group and supply your **custom domain (FQDN)** you want to link to the Let's encrypt cert using the variable `caddy_config`.  
+This example requires very limited input. Only specify an Azure Resource Group and supply your **custom domain (FQDN)** you want to link to the Let's encrypt cert using the variable `caddy_config`.
+
 ## Usage
 
 1. Clone or copy the files in this path to a local directory and open a command prompt.
