@@ -31,7 +31,7 @@ After resource creation, get the DNS-Label of the container group: **sonarqube-a
 
 ## Change the default password
 
-Once the sonarqube instance is up and running to log in and change the default password:
+Once the sonarqube instance is up and running, log in and change the default password:
 
 - **User:** _Admin_
 - **Password:** _Admin_

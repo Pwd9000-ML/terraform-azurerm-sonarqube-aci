@@ -41,7 +41,7 @@ Ensure you create a **DNS 'CNAME'** on your DNS provider for your **'custom.doma
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns01.png)
 
-Once the sonarqube instance is up and running to log in and change the default password:
+Once the sonarqube instance is up and running, log in and change the default password:
 
 - **User:** _Admin_
 - **Password:** _Admin_
