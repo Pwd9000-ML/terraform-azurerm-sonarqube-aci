@@ -6,30 +6,30 @@ variable "tags" {
   type = map(string)
   default = {
     Terraform   = "True"
-    Description = "Sonarqube aci demo built with Terraform"
+    Description = "Sonarqube aci with caddy"
     Author      = "Marcel Lupo"
     GitHub      = "https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci"
   }
-  description = "Optional Input - A map of key value pairs that is used to tag resources created."
+  description = "A map of key value pairs that is used to tag resources created."
 }
 
 variable "location" {
   type        = string
   default     = "uksouth"
-  description = "Optional Input - Location in azure where resources will be created. (Only in effect on newly created Resource Group when var.create_rg=true)"
+  description = "Location in azure where resources will be created. (Only in effect on newly created Resource Group when var.create_rg=true)"
 }
 
 ###Resource Group###
 variable "create_rg" {
   type        = bool
   default     = true
-  description = "Optional Input - Create a new resource group for this deployment. (Set to false to use existing resource group)"
+  description = "Create a new resource group for this deployment. (Set to false to use existing resource group)"
 }
 
 variable "sonarqube_rg_name" {
   type        = string
   default     = "Terraform-Sonarqube-aci"
-  description = "Optional Input - Name of the existing resource group. (var.create_rg=false) / Name of the resource group to create. (var.create_rg=true)."
+  description = "Name of the existing resource group. (var.create_rg=false) / Name of the resource group to create. (var.create_rg=true)."
 }
 
 ###Key Vault###
@@ -42,7 +42,7 @@ variable "kv_config" {
     name = "sonarqubekv"
     sku  = "standard"
   }
-  description = "Optional Input - Key Vault configuration object to create azure key vault to store sonarqube aci sql creds."
+  description = "Key Vault configuration object to create azure key vault to store sonarqube aci sql creds."
 }
 
 ###Storage Account###
@@ -67,7 +67,7 @@ variable "sa_config" {
     access_tier               = "Hot"
     is_hns_enabled            = false
   }
-  description = "Optional Input - Storage configuration object to create persistent azure file shares for sonarqube aci."
+  description = "Storage configuration object to create persistent azure file shares for sonarqube aci."
 }
 
 variable "shares_config" {
@@ -93,20 +93,20 @@ variable "shares_config" {
       quota_gb   = 1
     }
   ]
-  description = "Optional Input - Sonarqube file shares"
+  description = "Sonarqube file shares"
 }
 
 ###Azure SQL Server###
 variable "pass_length" {
   type        = number
   default     = 24
-  description = "Optional Input - Password length for sql admin creds. (Stored in sonarqube key vault)"
+  description = "Password length for sql admin creds. (Stored in sonarqube key vault)"
 }
 
 variable "sql_admin_username" {
   type        = string
   default     = "Sonar-Admin"
-  description = "Optional Input - Username for sql admin creds. (Stored in sonarqube key vault)"
+  description = "Username for sql admin creds. (Stored in sonarqube key vault)"
 }
 
 variable "mssql_config" {
@@ -118,7 +118,7 @@ variable "mssql_config" {
     name    = "sonarqubemssql"
     version = "12.0"
   }
-  description = "Optional Input - MSSQL configuration object to create persistent SQL server instance for sonarqube aci."
+  description = "MSSQL configuration object to create persistent SQL server instance for sonarqube aci."
 }
 
 variable "mssql_fw_rules" {
@@ -159,7 +159,7 @@ variable "mssql_db_config" {
     zone_redundant              = false
     point_in_time_restore_days  = 7
   }
-  description = "Optional Input - MSSQL database configuration object to create persistent azure SQL db for sonarqube aci."
+  description = "MSSQL database configuration object to create persistent azure SQL db for sonarqube aci."
 }
 
 ###Container Group - ACIs###
@@ -174,11 +174,11 @@ variable "aci_group_config" {
   default = {
     container_group_name = "sonarqubeaci"
     ip_address_type      = "Public"
-    dns_label            = "pwd9000-sonarqube"
+    dns_label            = "sonarqube-aci"
     os_type              = "Linux"
     restart_policy       = "OnFailure"
   }
-  description = "Optional Input - Container group configuration object to create sonarqube aci with caddy."
+  description = "Container group configuration object to create sonarqube aci with caddy reverse proxy."
 }
 
 variable "sonar_config" {
@@ -192,13 +192,13 @@ variable "sonar_config" {
   })
   default = {
     container_name                  = "sonarqube-server"
-    container_image                 = "sonarqube:lts-community"
+    container_image                 = "sonarqube:lts-community" #Check for more versions/tags here: https://hub.docker.com/_/sonarqube
     container_cpu                   = 2
     container_memory                = 8
     container_environment_variables = null
     container_commands              = []
   }
-  description = "Optional Input - Sonarqube container configuration object to create sonarqube aci."
+  description = "Sonarqube container configuration object to create sonarqube aci."
 }
 
 variable "caddy_config" {
@@ -216,7 +216,7 @@ variable "caddy_config" {
     container_cpu                   = 1
     container_memory                = 1
     container_environment_variables = null
-    container_commands              = ["caddy", "reverse-proxy", "--from", "sonar.pwd9000.com", "--to", "localhost:9000"]
+    container_commands              = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
   }
-  description = "Optional Input - Sonarqube container configuration object to create sonarqube aci."
+  description = "Sonarqube container configuration object to create caddy reverse proxy aci."
 }

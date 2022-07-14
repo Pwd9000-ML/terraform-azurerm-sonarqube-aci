@@ -60,7 +60,7 @@ resource "azurerm_storage_account" "sonarqube_sa" {
 }
 #Sonarqube shares
 resource "azurerm_storage_share" "sonarqube" {
-  for_each             = { for n in var.shares_config : n.share_name => n }
+  for_each             = { for each in var.shares_config : each.share_name => n }
   name                 = each.value.share_name
   quota                = each.value.quota_gb
   storage_account_name = azurerm_storage_account.sonarqube_sa.name
@@ -69,8 +69,7 @@ resource "azurerm_storage_share" "sonarqube" {
 resource "azurerm_storage_share_file" "sonar_properties" {
   name             = "sonar.properties"
   storage_share_id = azurerm_storage_share.sonarqube["conf"].id
-  #source           = abspath("${path.root}/sonar.properties")
-  source = abspath("../../sonar.properties")
+  source = abspath("${path.module}/sonar.properties")
 }
 
 ###Azure SQL Server###

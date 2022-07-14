@@ -38,5 +38,5 @@ output "sonarqube_aci_mssql_db_name" {
 
 output "sonarqube_aci_container_group_id" {
   value       = azurerm_container_group.sonarqube_aci.id
-  description = "The name of the sonarqube MSSQL database."
+  description = "The container group ID."
 }
