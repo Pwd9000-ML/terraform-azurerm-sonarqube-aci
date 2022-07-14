@@ -46,7 +46,7 @@ Once the sonarqube instance is up and running to log in and change the default p
 - **User:** _Admin_
 - **Password:** _Admin_
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/deault.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/default.png)
 
 Sonarqube container image reference: [Sonarqube docker image tags](https://hub.docker.com/_/sonarqube)
 
