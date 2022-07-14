@@ -126,7 +126,7 @@ variable "mssql_fw_rules" {
   default = [
     ["Allow All Azure IPs", "0.0.0.0", "0.0.0.0"]
   ]
-  description = "list of SQL firewall rules in format: [[rule1, startIP, endIP],[rule2, startIP, endIP]] etc."
+  description = "List of SQL firewall rules in format: [[rule1, startIP, endIP],[rule2, startIP, endIP]] etc."
 }
 
 ###MSSQL Database###
@@ -218,5 +218,5 @@ variable "caddy_config" {
     container_environment_variables = null
     container_commands              = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
   }
-  description = "Sonarqube container configuration object to create caddy reverse proxy aci."
+  description = "Caddy container configuration object to create caddy reverse proxy aci."
 }

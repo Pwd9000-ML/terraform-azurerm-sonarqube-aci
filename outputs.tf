@@ -3,7 +3,7 @@
 ##################################################
 output "sonarqube_aci_rg_id" {
   value       = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].id) : ""
-  description = "Output Resource Group ID. (Only if new resource group was created as part of this deployment)"
+  description = "Output Resource Group ID. (Only if new resource group was created as part of this deployment)."
 }
 
 output "sonarqube_aci_kv_id" {

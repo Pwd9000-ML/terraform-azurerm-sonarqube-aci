@@ -46,29 +46,36 @@ Password _Admin_
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/deault.png)
 
-Sonarqube container images reference: [Sonarqube docker image tags](https://hub.docker.com/_/sonarqube)
+Sonarqube container image reference: [Sonarqube docker image tags](https://hub.docker.com/_/sonarqube)
 
 ## Module Input variables
 
-- `common_tags` - (Optional) A map of key value pairs that is used to tag resources created. (Default: demo map).
-- `create_rg` - (Optional) Create a new resource group for this deployment. (Set to false to use existing resource group).
-- `create_vnet` - (Optional) Create a new Azure Virtual Network for this deployment. (Set to false to use existing Azure Virtual Network).
-- `dns_entries` - (Optional) Set custom dns config. If no values specified, this defaults to Azure DNS (Only in effect on newly created Vnet when variable:`create_vnet=true`).
-- `environment` - (Optional) Value to describe the environment. Used for tagging. (Default: Development).
-- `location` - (Optional) Location in azure where resources will be created. (Only in effect on newly created Resource Group when variable:`create_rg=true`).
-- `network_address_ip` - (Optional) Network base IP to construct network address space. (Only in effect on newly created Vnet when variable:`create_vnet=true`).
-- `network_address_mask` - (Optional) Network address mask to construct network address space. (Only in effect on newly created Vnet when variable:`create_vnet=true`).
-- `virtual_network_rg_name` - (Optional) Name of the resource group the existing Vnet is in if `create_rg=false` / Name of the resource group the Vnet will be created in if `create_rg=true`.
-- `virtual_network_name` - (Optional) Name of the existing Vnet subnets will be created in if `create_vnet=false` / Name of the new Vnet that will be created if `create_vnet=true`.
-- `subnet_config` - (Optional) Subnet config maps for each subnet to be created in either existing or newly created VNET based on if `create_vnet=true/false`.
-  
+- `tags` - (Optional) A map of key value pairs that is used to tag resources created.
+- `location` - (Optional) Location in azure where resources will be created. (Only in effect on newly created Resource Group when `var.create_rg=true`).
+- `create_rg` - (Optional) Create a new resource group for this deployment. (Set to `false` to use existing resource group).
+- `sonarqube_rg_name` - (Optional) Name of the existing resource group. (`var.create_rg=false`) / Name of the resource group to create. (`var.create_rg=true`).
+- `kv_config` - (Optional) Key Vault configuration object to create azure key vault to store sonarqube aci sql creds.
+- `sa_config` - (Optional) Storage configuration object to create persistent azure file shares for sonarqube aci..
+- `shares_config` - (Optional) Sonarqube file shares: `data`, `extensions`, `logs`, `conf`.
+- `pass_length` - (Optional) Password length for sql admin creds. (Stored in sonarqube key vault).
+- `sql_admin_username` - (Optional) Username for sql admin creds. (Stored in sonarqube key vault).
+- `mssql_config` - (Optional) MSSQL configuration object to create persistent SQL server instance for sonarqube aci.
+- `mssql_fw_rules` - (Optional) List of SQL firewall rules in format: `[[rule1, startIP, endIP],[rule2, startIP, endIP]]` etc.
+- `mssql_db_config` - (Optional) MSSQL database configuration object to create persistent azure SQL db for sonarqube aci.
+- `aci_group_config` - (Optional) Container group configuration object to create sonarqube aci with caddy reverse proxy.
+- `sonar_config` - (Optional) Sonarqube container configuration object to create sonarqube aci.
+- `caddy_config` - (Optional) Caddy container configuration object to create caddy reverse proxy aci.
+
 ## Module Outputs
 
-Module outputs are only generated for new resources created in this module e.g. Resource Group and/or Azure Virtual network.  
-Outputs are not generated if subnets are populated on an existing Azure Virtual Network.  
-
-- `core_network_rg_id` - Output Resource Group ID. (Only if new resource group was created as part of this deployment).
-- `core_vnet_id` -  Output Azure Virtual Network ID. (Only if new Vnet was created as part of this deployment).
+- `sonarqube_aci_rg_id` - Output Resource Group ID. (Only if new resource group was created as part of this deployment).
+- `sonarqube_aci_kv_id` - The resource ID for the sonarqube key vault.
+- `sonarqube_aci_sa_id` - The resource ID for the sonarqube storage account hosting file shares.
+- `sonarqube_aci_share_ids` - List of resource IDs of each of the sonarqube file shares.
+- `sonarqube_aci_mssql_id` - The resource ID for the sonarqube MSSQL Server instance.
+- `sonarqube_aci_mssql_db_id` - The resource ID for the sonarqube MSSQL database.
+- `sonarqube_aci_mssql_db_name` - The name of the sonarqube MSSQL database.
+- `sonarqube_aci_container_group_id` - The container group ID.
 
 ## Example 1
 
