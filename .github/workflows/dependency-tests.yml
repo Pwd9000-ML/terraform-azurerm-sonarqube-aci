@@ -6,9 +6,9 @@
 name: "Automated-Dependency-Tests-and-Release"
 on:
   workflow_dispatch:
-#  pull_request:
-#    branches:
-#      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
 # Dependabot will open a PR on terraform version changes, this 'dependabot' job is only used to test TF version changes by running a plan, apply and destroy in sequence.
