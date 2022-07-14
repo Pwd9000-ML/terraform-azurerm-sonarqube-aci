@@ -2,7 +2,7 @@
 
 # Module: Sonarqube Azure Container Instance (+ Automatic SSL)
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/caddy02.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/caddy02.png)
 
 ## Description
 
@@ -20,7 +20,7 @@ The module will build the following Azure resources:
 
 **Sonarqube** is exposed over TCP port 9000, and uses a production-ready reverse proxy [(caddy)](https://caddyserver.com/docs/) using the [sidecar pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/sidecar). Caddy will "automagically" take care of the SSL certificate setup, configuration and automatically proxy traffic to the sonarqube instance using ['Lets Encrypt certs'](https://letsencrypt.org/). Caddy requires **zero configuration** and provides out of the box secure **https://** access to your sonarqube instance using your own **custom domain**.
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/caddy01.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/caddy01.png)
 
 **NOTE:** There are some [rate limits](https://letsencrypt.org/docs/rate-limits/) using **Let's Encrypt**
 
@@ -33,18 +33,18 @@ container_commands = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "
 
 After all resources are created, get the DNS-Label of the container group **(sonarqube-aci.<azureregion>.azurecontainer.io)**:
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/dnslabel.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dnslabel.png)
 
 Ensure you create a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group.
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/dns.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns.png)
 
 Once the sonarqube instance is up and running to log in and change the default password:
 **Sonarqube Default Credentials**
 User: _Admin_
 Password _Admin_
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/deault.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/deault.png)
 
 Sonarqube container image reference: [Sonarqube docker image tags](https://hub.docker.com/_/sonarqube)
 
@@ -104,7 +104,7 @@ module "sonarcube-aci" {
 
 After all resources are created, get the DNS-Label of the container group **(sonarqube-aci.<azureregion>.azurecontainer.io)** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
 
-![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/release/master/assets/dns.png)
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns.png)
 ## Example 2
 
 ## Example 3
