@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 module "sonarcube-aci" {
-  source = "github.com/Pwd9000-ML/terraform-azurerm-sonarcube-aci"
+  source = "Pwd9000-ML/sonarqube-aci/azurerm"
 
   sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
   caddy_config = {
