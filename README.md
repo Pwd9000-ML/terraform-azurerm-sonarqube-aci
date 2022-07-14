@@ -68,7 +68,7 @@ Sonarqube container image reference: [Sonarqube docker image tags](https://hub.d
 
 ## Module Outputs
 
-- `sonarqube_aci_rg_id` - Output Resource Group ID. (Only if new resource group was created as part of this deployment).
+- `sonarqube_aci_rg_id` - Output Resource Group ID. (Only if new resource group was created as part of deployment).
 - `sonarqube_aci_kv_id` - The resource ID for the sonarqube key vault.
 - `sonarqube_aci_sa_id` - The resource ID for the sonarqube storage account hosting file shares.
 - `sonarqube_aci_share_ids` - List of resource IDs of each of the sonarqube file shares.
@@ -79,16 +79,20 @@ Sonarqube container image reference: [Sonarqube docker image tags](https://hub.d
 
 ## Example 1
 
-Simple example where a new Resource Group and Vnet will be created (Default).  
-This example requires no input and will create a new resource group and vnet populated with demo subnets based on the default input variables.  
+Simple example where the entire solution is built in a new Resource Group (Default).  
+This example requires very limited input. Only specify a Resource Group and supply your custom domain (FQDN) you wan tto link to the certificate.  
 
 ```hcl
 provider "azurerm" {
     features {}
 }
 
-module "dynamic-subnets" {
-    source  = "github.com/Pwd9000-ML/terraform-azurerm-dynamic-subnets"
+module "sonarcube-aci" {
+    source  = "github.com/Pwd9000-ML/terraform-azurerm-sonarcube-aci"
+
+    create_rg               = false     #Existing VNET Resource group name must be provided.
+    virtual_network_rg_name = "Core-Networking-Rg"
+    dns_entries             = ["10.1.0.10", "10.1.0.138"]
 }
 ```
 
