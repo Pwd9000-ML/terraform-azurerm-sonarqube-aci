@@ -1,3 +1,4 @@
+aci_dns_label     = "sonarqube-aci"
 sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
 caddy_config = {
   container_name                  = "caddy-reverse-proxy"

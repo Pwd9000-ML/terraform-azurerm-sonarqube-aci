@@ -15,6 +15,7 @@ provider "azurerm" {
 ##################################################
 module "sonarcube-aci" {
   source            = "../.."
+  aci_dns_label     = var.aci_dns_label
   sonarqube_rg_name = var.sonarqube_rg_name
   caddy_config      = var.caddy_config
 }
