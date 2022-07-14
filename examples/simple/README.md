@@ -25,7 +25,7 @@ This example requires very limited input. Only specify an Azure Resource Group a
 
 ## DNS Config
 
-After all resources are created, get the DNS-Label of the container group: **sonarqube-aci.(azureregion).azurecontainer.io** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
+After resource creation, get the DNS-Label of the container group: **sonarqube-aci.(azureregion).azurecontainer.io** and add a **DNS 'CNAME'** on your DNS provider for your **'custom.domain.com'** to point to the DNS label of the ACI container group:
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/dns01.png)  
 
@@ -35,3 +35,5 @@ Once the sonarqube instance is up and running to log in and change the default p
 
 - **User:** _Admin_
 - **Password:** _Admin_
+
+![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/default.png)
