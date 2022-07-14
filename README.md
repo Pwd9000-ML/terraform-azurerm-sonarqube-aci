@@ -26,7 +26,9 @@ The module will build the following Azure resources:
 
 **NOTE:** There are some [rate limits](https://letsencrypt.org/docs/rate-limits/) using **Let's Encrypt**
 
-See **Examples** on caddy usage. More information can also be found here: [caddy documentation](https://caddyserver.com/docs/quick-starts/reverse-proxy).
+More information can also be found here: [caddy documentation](https://caddyserver.com/docs/quick-starts/reverse-proxy).  
+Custom domain can be configured by giving your **"custom.domain.com"** value in the variable, `var.caddy_config` as shown in the snippet below.  
+See [Examples](https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/tree/master/examples) for more details.  
 
 ```hcl
 #Terraform caddy container commands:
@@ -107,4 +109,102 @@ module "sonarcube-aci" {
 
 ## Example 2
 
-## Example 3
+Advanced example where the entire solution is built in an existing Resource Group.  
+This example shows all configurable inputs.
+
+```hcl
+provider "azurerm" {
+  features {}
+}
+
+module "sonarcube-aci" {
+  source = "Pwd9000-ML/sonarqube-aci/azurerm"
+
+  create_rg         = false
+  sonarqube_rg_name = "pwd9000-sonarqube-aci-demo" #provide existing RG name (location for resources will be based on existing RG location)
+  kv_config = {
+    name = "sonarqubekv9000"
+    sku  = "standard"
+  }
+  sa_config = {
+    name                      = "sonarqubesa9000"
+    account_kind              = "StorageV2"
+    account_tier              = "Standard"
+    account_replication_type  = "LRS"
+    min_tls_version           = "TLS1_2"
+    enable_https_traffic_only = true
+    access_tier               = "Hot"
+    is_hns_enabled            = false
+  }
+  shares_config = [
+    {
+      share_name = "data"
+      quota_gb   = 10
+    },
+    {
+      share_name = "extensions"
+      quota_gb   = 5
+    },
+    {
+      share_name = "logs"
+      quota_gb   = 5
+    },
+    {
+      share_name = "conf"
+      quota_gb   = 1
+    }
+  ]
+  pass_length        = 24
+  sql_admin_username = "Sonar-Admin"
+  mssql_config = {
+    name    = "sonarqubemssql9000"
+    version = "12.0"
+  }
+  mssql_fw_rules = [
+    ["Allow All Azure IPs", "0.0.0.0", "0.0.0.0"]
+  ]
+  mssql_db_config = {
+    db_name                     = "sonarqubemssqldb9000"
+    collation                   = "SQL_Latin1_General_CP1_CS_AS"
+    create_mode                 = "Default"
+    license_type                = null
+    max_size_gb                 = 128
+    min_capacity                = 1
+    auto_pause_delay_in_minutes = 60
+    read_scale                  = false
+    sku_name                    = "GP_S_Gen5_2"
+    storage_account_type        = "Zone"
+    zone_redundant              = false
+    point_in_time_restore_days  = 7
+  }
+  aci_group_config = {
+    container_group_name = "sonarqubeaci9000"
+    ip_address_type      = "Public"
+    dns_label            = "sonarqube-aci"
+    os_type              = "Linux"
+    restart_policy       = "OnFailure"
+  }
+  sonar_config = {
+    container_name                  = "sonarqube-server"
+    container_image                 = "sonarqube:lts-community" #Check for more versions/tags here: https://hub.docker.com/_/sonarqube
+    container_cpu                   = 2
+    container_memory                = 8
+    container_environment_variables = null
+    container_commands              = []
+  }
+  caddy_config = {
+    container_name                  = "caddy-reverse-proxy"
+    container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+    container_cpu                   = 1
+    container_memory                = 1
+    container_environment_variables = null
+    container_commands              = ["caddy", "reverse-proxy", "--from", "custom.domain.com", "--to", "localhost:9000"]
+  }
+  tags = {
+    Terraform   = "True"
+    Description = "Sonarqube aci with caddy"
+    Author      = "Marcel Lupo"
+    GitHub      = "https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci"
+  }
+}
+```
