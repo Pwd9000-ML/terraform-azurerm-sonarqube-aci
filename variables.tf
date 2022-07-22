@@ -39,7 +39,7 @@ variable "kv_config" {
     sku  = string
   })
   default = {
-    name = "sonarqubekv"
+    name = "sonarqubekv9000"
     sku  = "standard"
   }
   description = "Key Vault configuration object to create azure key vault to store sonarqube aci sql creds."
@@ -58,7 +58,7 @@ variable "sa_config" {
     is_hns_enabled            = bool
   })
   default = {
-    name                      = "sonarqubesa"
+    name                      = "sonarqubesa9000"
     account_kind              = "StorageV2"
     account_tier              = "Standard"
     account_replication_type  = "LRS"
@@ -115,7 +115,7 @@ variable "mssql_config" {
     version = string
   })
   default = {
-    name    = "sonarqubemssql"
+    name    = "sonarqubemssql9000"
     version = "12.0"
   }
   description = "MSSQL configuration object to create persistent SQL server instance for sonarqube aci."
@@ -146,7 +146,7 @@ variable "mssql_db_config" {
     point_in_time_restore_days  = number
   })
   default = {
-    db_name                     = "sonarqubemssqldb"
+    db_name                     = "sonarqubemssqldb9000"
     collation                   = "SQL_Latin1_General_CP1_CS_AS"
     create_mode                 = "Default"
     license_type                = null
@@ -177,7 +177,7 @@ variable "aci_group_config" {
     restart_policy       = string
   })
   default = {
-    container_group_name = "sonarqubeaci"
+    container_group_name = "sonarqubeaci9000"
     ip_address_type      = "Public"
     os_type              = "Linux"
     restart_policy       = "OnFailure"
