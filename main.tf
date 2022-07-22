@@ -10,11 +10,6 @@ data "azurerm_client_config" "current" {}
 ##################################################
 # RESOURCES                                      #
 ##################################################
-resource "random_integer" "number" {
-  min = 0001
-  max = 9999
-}
-
 ###Resource Group###
 resource "azurerm_resource_group" "sonarqube_rg" {
   count    = var.create_rg ? 1 : 0
@@ -30,7 +25,7 @@ resource "azurerm_key_vault" "sonarqube_kv" {
   location                  = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
   enable_rbac_authorization = true
   #values from variable kv_config object
-  name      = lower("${var.kv_config.name}${random_integer.number.result}")
+  name      = lower(var.kv_config.name)
   sku_name  = var.kv_config.sku
   tenant_id = data.azurerm_client_config.current.tenant_id
   tags      = var.tags
@@ -48,7 +43,7 @@ resource "azurerm_storage_account" "sonarqube_sa" {
   resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
   #values from variable sa_config object
-  name                      = lower(substr("${var.sa_config.name}${random_integer.number.result}", 0, 24))
+  name                      = lower(substr(var.sa_config.name, 0, 24))
   account_kind              = var.sa_config.account_kind
   account_tier              = var.sa_config.account_tier
   account_replication_type  = var.sa_config.account_replication_type
@@ -101,7 +96,7 @@ resource "azurerm_mssql_server" "sonarqube_mssql" {
   resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
   #values from variable mssql_config object
-  name                         = lower("${var.mssql_config.name}${random_integer.number.result}")
+  name                         = lower(var.mssql_config.name)
   version                      = var.mssql_config.version
   administrator_login          = azurerm_key_vault_secret.username_secret.value
   administrator_login_password = azurerm_key_vault_secret.password_secret.value
@@ -120,7 +115,7 @@ resource "azurerm_mssql_firewall_rule" "sonarqube_mssql_fw_rules" {
 resource "azurerm_mssql_database" "sonarqube_mssql_db" {
   server_id = azurerm_mssql_server.sonarqube_mssql.id
   #values from variable mssql_db_config object
-  name                        = lower("${var.mssql_db_config.db_name}${random_integer.number.result}")
+  name                        = lower(var.mssql_db_config.db_name)
   collation                   = var.mssql_db_config.collation
   create_mode                 = var.mssql_db_config.create_mode
   license_type                = var.mssql_db_config.license_type
@@ -143,7 +138,7 @@ resource "azurerm_container_group" "sonarqube_aci" {
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
   dns_name_label      = var.aci_dns_label
   #values from variable aci_group_config object
-  name            = lower("${var.aci_group_config.container_group_name}${random_integer.number.result}")
+  name            = lower(var.aci_group_config.container_group_name)
   ip_address_type = var.aci_group_config.ip_address_type
   os_type         = var.aci_group_config.os_type
   restart_policy  = var.aci_group_config.restart_policy
