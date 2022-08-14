@@ -60,7 +60,7 @@ Caddy container image reference: [Caddy docker image tags](https://hub.docker.co
 - `create_rg` - (Optional) Create a new resource group for this deployment. (Set to `false` to use existing resource group).
 - `sonarqube_rg_name` - (Optional) Name of the existing resource group. (`var.create_rg=false`) / Name of the resource group to create. (`var.create_rg=true`).
 - `kv_config` - (Required) Key Vault configuration object to create azure key vault to store sonarqube aci sql creds.
-- `sa_config` - (Required) Storage configuration object to create persistent azure file shares for sonarqube aci..
+- `sa_config` - (Required) Storage configuration object to create persistent azure file shares for sonarqube aci.
 - `shares_config` - (Optional) Sonarqube file shares: `data`, `extensions`, `logs`, `conf`.
 - `pass_length` - (Optional) Password length for sql admin creds. (Stored in sonarqube key vault).
 - `sql_admin_username` - (Optional) Username for sql admin creds. (Stored in sonarqube key vault).
