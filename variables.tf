@@ -38,10 +38,6 @@ variable "kv_config" {
     name = string
     sku  = string
   })
-  default = {
-    name = "sonarqubekv9000"
-    sku  = "standard"
-  }
   description = "Key Vault configuration object to create azure key vault to store sonarqube aci sql creds."
 }
 
@@ -57,16 +53,6 @@ variable "sa_config" {
     min_tls_version           = string
     is_hns_enabled            = bool
   })
-  default = {
-    name                      = "sonarqubesa9000"
-    account_kind              = "StorageV2"
-    account_tier              = "Standard"
-    account_replication_type  = "LRS"
-    min_tls_version           = "TLS1_2"
-    enable_https_traffic_only = true
-    access_tier               = "Hot"
-    is_hns_enabled            = false
-  }
   description = "Storage configuration object to create persistent azure file shares for sonarqube aci."
 }
 
@@ -114,10 +100,6 @@ variable "mssql_config" {
     name    = string
     version = string
   })
-  default = {
-    name    = "sonarqubemssql9000"
-    version = "12.0"
-  }
   description = "MSSQL configuration object to create persistent SQL server instance for sonarqube aci."
 }
 
@@ -165,7 +147,6 @@ variable "mssql_db_config" {
 ###Container Group - ACIs###
 variable "aci_dns_label" {
   type        = string
-  default     = "sonarqube-aci"
   description = "DNS label to assign onto the Azure Container Group."
 }
 
@@ -176,12 +157,6 @@ variable "aci_group_config" {
     os_type              = string
     restart_policy       = string
   })
-  default = {
-    container_group_name = "sonarqubeaci9000"
-    ip_address_type      = "Public"
-    os_type              = "Linux"
-    restart_policy       = "OnFailure"
-  }
   description = "Container group configuration object to create sonarqube aci with caddy reverse proxy."
 }
 

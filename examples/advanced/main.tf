@@ -67,7 +67,7 @@ module "sonarcube-aci" {
     zone_redundant              = false
     point_in_time_restore_days  = 7
   }
-  aci_dns_label    = "sonarqube-aci"
+  aci_dns_label = "sonarqube-aci-${random_integer.number.result}"
   aci_group_config = {
     container_group_name = "sonarqubeaci${random_integer.number.result}"
     ip_address_type      = "Public"

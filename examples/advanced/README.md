@@ -1,6 +1,6 @@
 # Description
 
-Advanced example where the entire solution is built in an existing Resource Group.  
+Advanced example where the entire solution is built in an existing Resource Group (And supplying all possible variable values).  
 This example shows all configurable inputs.
 
 ## Usage

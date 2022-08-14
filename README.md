@@ -59,16 +59,16 @@ Caddy container image reference: [Caddy docker image tags](https://hub.docker.co
 - `location` - (Optional) Location in azure where resources will be created. (Only in effect on newly created Resource Group when `var.create_rg=true`).
 - `create_rg` - (Optional) Create a new resource group for this deployment. (Set to `false` to use existing resource group).
 - `sonarqube_rg_name` - (Optional) Name of the existing resource group. (`var.create_rg=false`) / Name of the resource group to create. (`var.create_rg=true`).
-- `kv_config` - (Optional) Key Vault configuration object to create azure key vault to store sonarqube aci sql creds.
-- `sa_config` - (Optional) Storage configuration object to create persistent azure file shares for sonarqube aci..
+- `kv_config` - (Required) Key Vault configuration object to create azure key vault to store sonarqube aci sql creds.
+- `sa_config` - (Required) Storage configuration object to create persistent azure file shares for sonarqube aci..
 - `shares_config` - (Optional) Sonarqube file shares: `data`, `extensions`, `logs`, `conf`.
 - `pass_length` - (Optional) Password length for sql admin creds. (Stored in sonarqube key vault).
 - `sql_admin_username` - (Optional) Username for sql admin creds. (Stored in sonarqube key vault).
-- `mssql_config` - (Optional) MSSQL configuration object to create persistent SQL server instance for sonarqube aci.
+- `mssql_config` - (Required) MSSQL configuration object to create persistent SQL server instance for sonarqube aci.
 - `mssql_fw_rules` - (Optional) List of SQL firewall rules in format: `[[rule1, startIP, endIP],[rule2, startIP, endIP]]` etc.
 - `mssql_db_config` - (Optional) MSSQL database configuration object to create persistent azure SQL db for sonarqube aci.
-- `aci_dns_label` - (Optional) DNS label to assign onto the Azure Container Group.
-- `aci_group_config` - (Optional) Container group configuration object to create sonarqube aci with caddy reverse proxy.
+- `aci_dns_label` - (Required) DNS label to assign onto the Azure Container Group.
+- `aci_group_config` - (Required) Container group configuration object to create sonarqube aci with caddy reverse proxy.
 - `sonar_config` - (Optional) Sonarqube container configuration object to create sonarqube aci.
 - `caddy_config` - (Optional) Caddy container configuration object to create caddy reverse proxy aci.
 
@@ -86,18 +86,47 @@ Caddy container image reference: [Caddy docker image tags](https://hub.docker.co
 ## Example 1
 
 Simple example where the entire solution is built in a new Resource Group (Default).  
-This example requires very limited input. Only specify an Azure Resource Group and supply your **custom domain (FQDN)** you want to link to the Let's encrypt cert using the variable `var.caddy_config` and the container group DNS label using the variable `var.aci_dns_label`.  
+This example requires very limited input. Only specify an Azure Resource Group and **required** variable values and supply your own **custom domain (FQDN)** you want to link to the Let's encrypt cert using `caddy_config` and the container group DNS label using `aci_dns_label`.  
 
 ```hcl
 provider "azurerm" {
   features {}
 }
 
+resource "random_integer" "number" {
+  min = 0001
+  max = 9999
+}
+
 module "sonarcube-aci" {
   source = "Pwd9000-ML/sonarqube-aci/azurerm"
 
-  sonarqube_rg_name = "Terraform-Sonarqube-aci-demo"
-  aci_dns_label     = "sonarqube-aci"
+  sonarqube_rg_name = "Terraform-Sonarqube-aci-simple-demo"
+  kv_config = {
+    name = "sonarqubekv${random_integer.number.result}"
+    sku  = "standard"
+  }
+  sa_config = {
+    name                      = "sonarqubesa${random_integer.number.result}"
+    account_kind              = "StorageV2"
+    account_tier              = "Standard"
+    account_replication_type  = "LRS"
+    min_tls_version           = "TLS1_2"
+    enable_https_traffic_only = true
+    access_tier               = "Hot"
+    is_hns_enabled            = false
+  }
+  mssql_config = {
+    name    = "sonarqubemssql${random_integer.number.result}"
+    version = "12.0"
+  }
+  aci_group_config = {
+    container_group_name = "sonarqubeaci${random_integer.number.result}"
+    ip_address_type      = "Public"
+    os_type              = "Linux"
+    restart_policy       = "OnFailure"
+  }
+  aci_dns_label = "sonarqube-aci-${random_integer.number.result}"
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
     container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
@@ -113,7 +142,7 @@ module "sonarcube-aci" {
 
 ## Example 2
 
-Advanced example where the entire solution is built in an existing Resource Group.  
+Advanced example where the entire solution is built in an existing Resource Group (And supplying all possible variable values).  
 This example shows all configurable inputs.
 
 ```hcl
@@ -186,7 +215,7 @@ module "sonarcube-aci" {
     zone_redundant              = false
     point_in_time_restore_days  = 7
   }
-  aci_dns_label    = "sonarqube-aci"
+  aci_dns_label = "sonarqube-aci-${random_integer.number.result}"
   aci_group_config = {
     container_group_name = "sonarqubeaci${random_integer.number.result}"
     ip_address_type      = "Public"
