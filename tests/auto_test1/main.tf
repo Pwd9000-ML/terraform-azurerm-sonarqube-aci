@@ -20,7 +20,7 @@ resource "random_integer" "number" {
 ##################################################
 module "sonarcube-aci" {
   source            = "../.."
-  sonarqube_rg_name = "Terraform-Sonarqube-aci-test"
+  sonarqube_rg_name = var.sonarqube_rg_name
   kv_config = {
     name = "sonarqubekv${random_integer.number.result}"
     sku  = "standard"

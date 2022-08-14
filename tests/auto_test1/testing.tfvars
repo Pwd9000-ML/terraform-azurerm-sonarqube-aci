@@ -1,0 +1,1 @@
+sonarqube_rg_name = "Terraform-Sonarqube-aci-test"
