@@ -214,6 +214,7 @@ module "sonarcube-aci" {
     storage_account_type        = "Zone"
     zone_redundant              = false
     point_in_time_restore_days  = 7
+    backup_interval_in_hours    = 24
   }
   aci_dns_label = "sonarqube-aci-${random_integer.number.result}"
   aci_group_config = {
