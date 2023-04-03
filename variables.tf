@@ -129,6 +129,7 @@ variable "mssql_db_config" {
     storage_account_type        = string
     zone_redundant              = bool
     point_in_time_restore_days  = number
+    backup_interval_in_hours    = number
   })
   default = {
     db_name                     = "sonarqubemssqldb9000"
@@ -143,6 +144,7 @@ variable "mssql_db_config" {
     storage_account_type        = "Zone"
     zone_redundant              = false
     point_in_time_restore_days  = 7
+    backup_interval_in_hours    = 24
   }
   description = "MSSQL database configuration object to create persistent azure SQL db for sonarqube aci."
 }

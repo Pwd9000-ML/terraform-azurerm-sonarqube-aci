@@ -128,6 +128,7 @@ resource "azurerm_mssql_database" "sonarqube_mssql_db" {
   zone_redundant              = var.mssql_db_config.zone_redundant
   short_term_retention_policy {
     retention_days = var.mssql_db_config.point_in_time_restore_days
+    backup_interval_in_hours = var.mssql_db_config.backup_interval_in_hours
   }
   tags = var.tags
 }
