@@ -8,6 +8,8 @@
 
 Public Terraform Registry module for setting up an AZURE hosted **Sonarqube Azure Container Instance (ACI)** including: persistent PaaS Database **(Azure SQL)**, persistent PaaS File Shares **(Azure Files)** and support for custom domain using reverse proxy **(Caddy)** sidecar container.  
 
+Also see this module for creating a **VNET integrated** instance of SonarQube using a private `.local` DNS zone and self-signed Certificate. [VNET integrated SonarQube Azure Container Instance (+ Automatic SSL self-signed certificate)](https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci-internal).  
+
 The module will build the following Azure resources:
 
 - Azure Resource Group (Optional)
