@@ -55,36 +55,6 @@ Once the sonarqube instance is up and running, log in and change the default pas
 Sonarqube container image reference: [Sonarqube docker image tags](https://hub.docker.com/_/sonarqube)  
 Caddy container image reference: [Caddy docker image tags](https://hub.docker.com/_/caddy)
 
-## Module Input variables
-
-- `tags` - (Optional) A map of key value pairs that is used to tag resources created.
-- `location` - (Optional) Location in azure where resources will be created. (Only in effect on newly created Resource Group when `var.create_rg=true`).
-- `create_rg` - (Optional) Create a new resource group for this deployment. (Set to `false` to use existing resource group).
-- `sonarqube_rg_name` - (Optional) Name of the existing resource group. (`var.create_rg=false`) / Name of the resource group to create. (`var.create_rg=true`).
-- `kv_config` - (Required) Key Vault configuration object to create azure key vault to store sonarqube aci sql creds.
-- `sa_config` - (Required) Storage configuration object to create persistent azure file shares for sonarqube aci.
-- `shares_config` - (Optional) Sonarqube file shares: `data`, `extensions`, `logs`, `conf`.
-- `pass_length` - (Optional) Password length for sql admin creds. (Stored in sonarqube key vault).
-- `sql_admin_username` - (Optional) Username for sql admin creds. (Stored in sonarqube key vault).
-- `mssql_config` - (Required) MSSQL configuration object to create persistent SQL server instance for sonarqube aci.
-- `mssql_fw_rules` - (Optional) List of SQL firewall rules in format: `[[rule1, startIP, endIP],[rule2, startIP, endIP]]` etc.
-- `mssql_db_config` - (Optional) MSSQL database configuration object to create persistent azure SQL db for sonarqube aci.
-- `aci_dns_label` - (Required) DNS label to assign onto the Azure Container Group.
-- `aci_group_config` - (Required) Container group configuration object to create sonarqube aci with caddy reverse proxy.
-- `sonar_config` - (Optional) Sonarqube container configuration object to create sonarqube aci.
-- `caddy_config` - (Optional) Caddy container configuration object to create caddy reverse proxy aci.
-
-## Module Outputs
-
-- `sonarqube_aci_rg_id` - Output Resource Group ID. (Only if new resource group was created as part of deployment).
-- `sonarqube_aci_kv_id` - The resource ID for the sonarqube key vault.
-- `sonarqube_aci_sa_id` - The resource ID for the sonarqube storage account hosting file shares.
-- `sonarqube_aci_share_ids` - List of resource IDs of each of the sonarqube file shares.
-- `sonarqube_aci_mssql_id` - The resource ID for the sonarqube MSSQL Server instance.
-- `sonarqube_aci_mssql_db_id` - The resource ID for the sonarqube MSSQL database.
-- `sonarqube_aci_mssql_db_name` - The name of the sonarqube MSSQL database.
-- `sonarqube_aci_container_group_id` - The container group ID.
-
 ## Example 1
 
 Simple example where the entire solution is built in a new Resource Group (Default).  
