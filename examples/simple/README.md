@@ -37,3 +37,35 @@ Once the sonarqube instance is up and running, log in and change the default pas
 - **Password:** _Admin_
 
 ![image.png](https://raw.githubusercontent.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci/master/assets/default.png)
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_sonarcube-aci"></a> [sonarcube-aci](#module\_sonarcube-aci) | Pwd9000-ML/sonarqube-aci/azurerm | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [random_integer.number](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
+
+## Inputs
+
+No inputs.
+
+## Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->
