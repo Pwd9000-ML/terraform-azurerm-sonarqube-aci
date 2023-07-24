@@ -44,7 +44,7 @@ module "sonarcube-aci" {
       quota_gb   = 1
     }
   ]
-  pass_length        = 24
+  pass_length        = 36
   sql_admin_username = "Sonar-Admin"
   mssql_config = {
     name    = "sonarqubemssql${random_integer.number.result}"
