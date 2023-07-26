@@ -8,7 +8,8 @@ resource "random_integer" "number" {
 }
 
 module "sonarcube-aci" {
-  source = "Pwd9000-ML/sonarqube-aci/azurerm"
+  source  = "Pwd9000-ML/sonarqube-aci/azurerm"
+  version = ">= 1.1.0"
 
   create_rg         = false
   sonarqube_rg_name = "pwd9000-sonarqube-aci-demo" #provide existing RG name (location for resources will be based on existing RG location)

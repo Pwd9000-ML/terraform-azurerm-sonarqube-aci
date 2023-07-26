@@ -39,7 +39,7 @@ variable "kv_config" {
     sku  = string
   })
   description = "Key Vault configuration object to create azure key vault to store sonarqube aci sql creds."
-  nullable = false
+  nullable    = false
 }
 
 ###Storage Account###
@@ -55,7 +55,7 @@ variable "sa_config" {
     is_hns_enabled            = bool
   })
   description = "Storage configuration object to create persistent azure file shares for sonarqube aci."
-  nullable = false
+  nullable    = false
 }
 
 variable "shares_config" {
@@ -103,7 +103,7 @@ variable "mssql_config" {
     version = string
   })
   description = "MSSQL configuration object to create persistent SQL server instance for sonarqube aci."
-  nullable = false
+  nullable    = false
 }
 
 variable "mssql_fw_rules" {
@@ -153,7 +153,7 @@ variable "mssql_db_config" {
 variable "aci_dns_label" {
   type        = string
   description = "DNS label to assign onto the Azure Container Group."
-  nullable = false
+  nullable    = false
 }
 
 variable "aci_group_config" {
@@ -164,7 +164,7 @@ variable "aci_group_config" {
     restart_policy       = string
   })
   description = "Container group configuration object to create sonarqube aci with caddy reverse proxy."
-  nullable = false
+  nullable    = false
 }
 
 variable "sonar_config" {

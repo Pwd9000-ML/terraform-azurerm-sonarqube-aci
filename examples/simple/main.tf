@@ -8,7 +8,8 @@ resource "random_integer" "number" {
 }
 
 module "sonarcube-aci" {
-  source = "Pwd9000-ML/sonarqube-aci/azurerm"
+  source  = "Pwd9000-ML/sonarqube-aci/azurerm"
+  version = ">= 1.1.0"
 
   sonarqube_rg_name = "Terraform-Sonarqube-aci-simple-demo"
   kv_config = {
