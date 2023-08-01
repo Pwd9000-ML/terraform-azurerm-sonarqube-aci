@@ -53,7 +53,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_sonarcube-aci"></a> [sonarcube-aci](#module\_sonarcube-aci) | Pwd9000-ML/sonarqube-aci/azurerm | n/a |
+| <a name="module_sonarcube-aci"></a> [sonarcube-aci](#module\_sonarcube-aci) | Pwd9000-ML/sonarqube-aci/azurerm | >= 1.1.0 |
 
 ## Resources
 
