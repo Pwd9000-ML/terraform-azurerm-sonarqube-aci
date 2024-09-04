@@ -177,7 +177,7 @@ variable "sonar_config" {
   })
   default = {
     container_name                  = "sonarqube-server"
-    container_image                 = "sonarqube:lts-community" #Check for more versions/tags here: https://hub.docker.com/_/sonarqube
+    container_image                 = "ghcr.io/homebrew/core/sonarqube-lts:9.9.6.92038"
     container_cpu                   = 2
     container_memory                = 8
     container_environment_variables = null
@@ -197,7 +197,7 @@ variable "caddy_config" {
   })
   default = {
     container_name                  = "caddy-reverse-proxy"
-    container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+    container_image                 = "ghcr.io/sashkab/docker-caddy2/docker-caddy2:latest"
     container_cpu                   = 1
     container_memory                = 1
     container_environment_variables = null

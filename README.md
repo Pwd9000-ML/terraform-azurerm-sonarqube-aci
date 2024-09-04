@@ -100,7 +100,7 @@ module "sonarcube-aci" {
   aci_dns_label = "sonarqube-aci-${random_integer.number.result}"
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
-    container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+    container_image                 = "ghcr.io/sashkab/docker-caddy2/docker-caddy2:latest"
     container_cpu                   = 1
     container_memory                = 1
     container_environment_variables = null
@@ -196,7 +196,7 @@ module "sonarcube-aci" {
   }
   sonar_config = {
     container_name                  = "sonarqube-server"
-    container_image                 = "sonarqube:lts-community" #Check for more versions/tags here: https://hub.docker.com/_/sonarqube
+    container_image                 = "ghcr.io/homebrew/core/sonarqube-lts:9.9.6.92038"
     container_cpu                   = 2
     container_memory                = 8
     container_environment_variables = null
@@ -204,7 +204,7 @@ module "sonarcube-aci" {
   }
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
-    container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+    container_image                 = "ghcr.io/sashkab/docker-caddy2/docker-caddy2:latest"
     container_cpu                   = 1
     container_memory                = 1
     container_environment_variables = null
@@ -266,7 +266,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_aci_dns_label"></a> [aci\_dns\_label](#input\_aci\_dns\_label) | DNS label to assign onto the Azure Container Group. | `string` | n/a | yes |
 | <a name="input_aci_group_config"></a> [aci\_group\_config](#input\_aci\_group\_config) | Container group configuration object to create sonarqube aci with caddy reverse proxy. | <pre>object({<br>    container_group_name = string<br>    ip_address_type      = string<br>    os_type              = string<br>    restart_policy       = string<br>  })</pre> | n/a | yes |
-| <a name="input_caddy_config"></a> [caddy\_config](#input\_caddy\_config) | Caddy container configuration object to create caddy reverse proxy aci. | <pre>object({<br>    container_name                  = string<br>    container_image                 = string<br>    container_cpu                   = number<br>    container_memory                = number<br>    container_environment_variables = map(string)<br>    container_commands              = list(string)<br>  })</pre> | <pre>{<br>  "container_commands": [<br>    "caddy",<br>    "reverse-proxy",<br>    "--from",<br>    "custom.domain.com",<br>    "--to",<br>    "localhost:9000"<br>  ],<br>  "container_cpu": 1,<br>  "container_environment_variables": null,<br>  "container_image": "caddy:latest",<br>  "container_memory": 1,<br>  "container_name": "caddy-reverse-proxy"<br>}</pre> | no |
+| <a name="input_caddy_config"></a> [caddy\_config](#input\_caddy\_config) | Caddy container configuration object to create caddy reverse proxy aci. | <pre>object({<br>    container_name                  = string<br>    container_image                 = string<br>    container_cpu                   = number<br>    container_memory                = number<br>    container_environment_variables = map(string)<br>    container_commands              = list(string)<br>  })</pre> | <pre>{<br>  "container_commands": [<br>    "caddy",<br>    "reverse-proxy",<br>    "--from",<br>    "custom.domain.com",<br>    "--to",<br>    "localhost:9000"<br>  ],<br>  "container_cpu": 1,<br>  "container_environment_variables": null,<br>  "container_image": "ghcr.io/sashkab/docker-caddy2/docker-caddy2:latest",<br>  "container_memory": 1,<br>  "container_name": "caddy-reverse-proxy"<br>}</pre> | no |
 | <a name="input_create_rg"></a> [create\_rg](#input\_create\_rg) | Create a new resource group for this deployment. (Set to false to use existing resource group) | `bool` | `true` | no |
 | <a name="input_kv_config"></a> [kv\_config](#input\_kv\_config) | Key Vault configuration object to create azure key vault to store sonarqube aci sql creds. | <pre>object({<br>    name = string<br>    sku  = string<br>  })</pre> | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Location in azure where resources will be created. (Only in effect on newly created Resource Group when var.create\_rg=true) | `string` | `"uksouth"` | no |
@@ -276,7 +276,7 @@ No modules.
 | <a name="input_pass_length"></a> [pass\_length](#input\_pass\_length) | Password length for sql admin creds. (Stored in sonarqube key vault) | `number` | `36` | no |
 | <a name="input_sa_config"></a> [sa\_config](#input\_sa\_config) | Storage configuration object to create persistent azure file shares for sonarqube aci. | <pre>object({<br>    name                      = string<br>    account_kind              = string<br>    account_tier              = string<br>    account_replication_type  = string<br>    access_tier               = string<br>    enable_https_traffic_only = bool<br>    min_tls_version           = string<br>    is_hns_enabled            = bool<br>  })</pre> | n/a | yes |
 | <a name="input_shares_config"></a> [shares\_config](#input\_shares\_config) | Sonarqube file shares | <pre>list(object({<br>    share_name = string<br>    quota_gb   = number<br>  }))</pre> | <pre>[<br>  {<br>    "quota_gb": 10,<br>    "share_name": "data"<br>  },<br>  {<br>    "quota_gb": 10,<br>    "share_name": "extensions"<br>  },<br>  {<br>    "quota_gb": 10,<br>    "share_name": "logs"<br>  },<br>  {<br>    "quota_gb": 1,<br>    "share_name": "conf"<br>  }<br>]</pre> | no |
-| <a name="input_sonar_config"></a> [sonar\_config](#input\_sonar\_config) | Sonarqube container configuration object to create sonarqube aci. | <pre>object({<br>    container_name                  = string<br>    container_image                 = string<br>    container_cpu                   = number<br>    container_memory                = number<br>    container_environment_variables = map(string)<br>    container_commands              = list(string)<br>  })</pre> | <pre>{<br>  "container_commands": [],<br>  "container_cpu": 2,<br>  "container_environment_variables": null,<br>  "container_image": "sonarqube:lts-community",<br>  "container_memory": 8,<br>  "container_name": "sonarqube-server"<br>}</pre> | no |
+| <a name="input_sonar_config"></a> [sonar\_config](#input\_sonar\_config) | Sonarqube container configuration object to create sonarqube aci. | <pre>object({<br>    container_name                  = string<br>    container_image                 = string<br>    container_cpu                   = number<br>    container_memory                = number<br>    container_environment_variables = map(string)<br>    container_commands              = list(string)<br>  })</pre> | <pre>{<br>  "container_commands": [],<br>  "container_cpu": 2,<br>  "container_environment_variables": null,<br>  "container_image": "ghcr.io/homebrew/core/sonarqube-lts:9.9.6.92038",<br>  "container_memory": 8,<br>  "container_name": "sonarqube-server"<br>}</pre> | no |
 | <a name="input_sonarqube_rg_name"></a> [sonarqube\_rg\_name](#input\_sonarqube\_rg\_name) | Name of the existing resource group. (var.create\_rg=false) / Name of the resource group to create. (var.create\_rg=true). | `string` | `"Terraform-Sonarqube-aci"` | no |
 | <a name="input_sql_admin_username"></a> [sql\_admin\_username](#input\_sql\_admin\_username) | Username for sql admin creds. (Stored in sonarqube key vault) | `string` | `"Sonar-Admin"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of key value pairs that is used to tag resources created. | `map(string)` | <pre>{<br>  "Author": "Marcel Lupo",<br>  "Description": "Sonarqube aci with caddy",<br>  "GitHub": "https://github.com/Pwd9000-ML/terraform-azurerm-sonarqube-aci",<br>  "Terraform": "True"<br>}</pre> | no |

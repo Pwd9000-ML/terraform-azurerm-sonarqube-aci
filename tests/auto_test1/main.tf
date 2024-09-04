@@ -47,7 +47,7 @@ module "sonarcube-aci" {
   aci_dns_label = "sonarqube-aci-${random_integer.number.result}"
   caddy_config = {
     container_name                  = "caddy-reverse-proxy"
-    container_image                 = "caddy:latest" #Check for more versions/tags here: https://hub.docker.com/_/caddy
+    container_image                 = "ghcr.io/sashkab/docker-caddy2/docker-caddy2:latest"
     container_cpu                   = 1
     container_memory                = 1
     container_environment_variables = null
