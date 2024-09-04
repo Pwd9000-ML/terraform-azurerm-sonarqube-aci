@@ -43,14 +43,14 @@ resource "azurerm_storage_account" "sonarqube_sa" {
   resource_group_name = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].name) : tostring(data.azurerm_resource_group.sonarqube_rg[0].name)
   location            = var.create_rg ? tostring(azurerm_resource_group.sonarqube_rg[0].location) : tostring(data.azurerm_resource_group.sonarqube_rg[0].location)
   #values from variable sa_config object
-  name                      = lower(substr(var.sa_config.name, 0, 24))
-  account_kind              = var.sa_config.account_kind
-  account_tier              = var.sa_config.account_tier
-  account_replication_type  = var.sa_config.account_replication_type
-  access_tier               = var.sa_config.access_tier
-  min_tls_version           = var.sa_config.min_tls_version
-  is_hns_enabled            = var.sa_config.is_hns_enabled
-  tags                      = var.tags
+  name                     = lower(substr(var.sa_config.name, 0, 24))
+  account_kind             = var.sa_config.account_kind
+  account_tier             = var.sa_config.account_tier
+  account_replication_type = var.sa_config.account_replication_type
+  access_tier              = var.sa_config.access_tier
+  min_tls_version          = var.sa_config.min_tls_version
+  is_hns_enabled           = var.sa_config.is_hns_enabled
+  tags                     = var.tags
 }
 #Sonarqube shares
 resource "azurerm_storage_share" "sonarqube" {

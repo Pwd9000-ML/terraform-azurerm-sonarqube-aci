@@ -18,13 +18,13 @@ module "sonarcube-aci" {
     sku  = "standard"
   }
   sa_config = {
-    name                      = "sonarqubesa${random_integer.number.result}"
-    account_kind              = "StorageV2"
-    account_tier              = "Standard"
-    account_replication_type  = "LRS"
-    min_tls_version           = "TLS1_2"
-    access_tier               = "Hot"
-    is_hns_enabled            = false
+    name                     = "sonarqubesa${random_integer.number.result}"
+    account_kind             = "StorageV2"
+    account_tier             = "Standard"
+    account_replication_type = "LRS"
+    min_tls_version          = "TLS1_2"
+    access_tier              = "Hot"
+    is_hns_enabled           = false
   }
   shares_config = [
     {

@@ -45,13 +45,13 @@ variable "kv_config" {
 ###Storage Account###
 variable "sa_config" {
   type = object({
-    name                      = string
-    account_kind              = string
-    account_tier              = string
-    account_replication_type  = string
-    access_tier               = string
-    min_tls_version           = string
-    is_hns_enabled            = bool
+    name                     = string
+    account_kind             = string
+    account_tier             = string
+    account_replication_type = string
+    access_tier              = string
+    min_tls_version          = string
+    is_hns_enabled           = bool
   })
   description = "Storage configuration object to create persistent azure file shares for sonarqube aci."
   nullable    = false
