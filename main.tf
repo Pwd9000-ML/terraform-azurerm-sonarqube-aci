@@ -48,7 +48,6 @@ resource "azurerm_storage_account" "sonarqube_sa" {
   account_tier              = var.sa_config.account_tier
   account_replication_type  = var.sa_config.account_replication_type
   access_tier               = var.sa_config.access_tier
-  enable_https_traffic_only = var.sa_config.enable_https_traffic_only
   min_tls_version           = var.sa_config.min_tls_version
   is_hns_enabled            = var.sa_config.is_hns_enabled
   tags                      = var.tags

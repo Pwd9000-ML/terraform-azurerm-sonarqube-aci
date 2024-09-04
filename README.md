@@ -84,7 +84,6 @@ module "sonarcube-aci" {
     account_tier              = "Standard"
     account_replication_type  = "LRS"
     min_tls_version           = "TLS1_2"
-    enable_https_traffic_only = true
     access_tier               = "Hot"
     is_hns_enabled            = false
   }
@@ -142,7 +141,7 @@ module "sonarcube-aci" {
     account_tier              = "Standard"
     account_replication_type  = "LRS"
     min_tls_version           = "TLS1_2"
-    enable_https_traffic_only = true
+
     access_tier               = "Hot"
     is_hns_enabled            = false
   }
