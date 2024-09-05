@@ -77,7 +77,7 @@ module "sonarcube-aci" {
   }
   sonar_config = {
     container_name                  = "sonarqube-server"
-    container_image                 = "ghcr.io/homebrew/core/sonarqube-lts:9.9.6.92038"
+    container_image                 = "ghcr.io/metrostar/quartz/ironbank/big-bang/sonarqube-9:9.9.4-community"
     container_cpu                   = 2
     container_memory                = 8
     container_environment_variables = null
